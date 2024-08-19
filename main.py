@@ -50,8 +50,9 @@ def create_account():
         
     with open("accounts.txt", "a") as file:  # Append to the file
         file.write(f"{id},{hash_value},{profession}\n")
-
-    new_professional = Profesionales(id, hash_value, profession)
+    now = datetime.now()
+    date_string = now.strftime("%B %d, %Y")
+    new_professional = Profesionales(id, hash_value, profession,date_string)
     professionals_list.append(new_professional)
     return new_professional
 
