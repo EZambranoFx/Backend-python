@@ -1,46 +1,46 @@
-import requests
-from bs4 import BeautifulSoup
+def login():
+    # Get input from the user
+    id = input("Enter ID (must be 10 digits): ")
+    # Check if the ID is exactly 10 digits and consists of only digits
+    if len(id) == 10 and id.isdigit():
+        password = input("Enter Password: ")
+        hash_value = hash(password)
+        profession = input("Enter Profession: ")
+        return id, hash_value, profession
+    else:
+        print("Invalid ID. Please enter 10 digits.")
 
-URL = "https://realpython.github.io/fake-jobs/"
-page = requests.get(URL)
+def create_account():
+  while True:
+    id = input("Enter new ID (must be 10 digits): ")
+    if len(id) == 10 and id.isdigit():
+        break
+    else:
+        print("Invalid ID. Please enter 10 digits.")
+        
+    password = input("Enter new Password: ")
+    hash_value = hash(password)
+    profession = input("Enter Profession: ")
+  return id, hash_value, profession
 
-soup = BeautifulSoup(page.content, "html.parser")
-
-results = soup.find(id="ResultsContainer")
-
-job_elements = results.find_all("div", class_="card-content")
-
-'''
-for job_element in job_elements:
-    title_element = job_element.find("h2", class_="title")
-    company_element = job_element.find("h3", class_="company")
-    location_element = job_element.find("p", class_="location")
-    print(title_element.text.strip())
-    print(company_element.text.strip())
-    print(location_element.text.strip())
-    print()
-'''
-
-python_jobs = results.find_all(
-    "h2", string=lambda text: "python" in text.lower()
-)
-
-python_job_elements = [
-    h2_element.parent.parent.parent for h2_element in python_jobs
-]
-
-for job_element in python_job_elements:
-    title_element = job_element.find("h2", class_="title")
-    company_element = job_element.find("h3", class_="company")
-    location_element = job_element.find("p", class_="location")
-    print(title_element.text.strip())
-    print(company_element.text.strip())
-    print(location_element.text.strip())
-    links = job_element.find_all("a")
-    for link in links:
-        link_url = link["href"]
-        print(f"Apply here: {link_url}\n")
-    print()
-
-#print(python_jobs)
-#print(results.prettify())
+# Call the login function
+"""
+Asks the user if they want to login or create an account.
+"""
+choice = input("Do you want to login or create an account? (login/create): ")
+if choice.lower() == "login":
+    user_data = login()
+    if user_data is not None:
+        id, hashed_password, profession = user_data
+        print(f"Login successful! Welcome, user ID: {id}")
+    else:
+        print("Login failed due to invalid ID.")
+elif choice.lower() == "create":
+    user_data = create_account()
+    id, hashed_password, profession = user_data
+    print(f"Account created successfully! User ID: {id}")
+else:
+    print("Invalid choice.")
+  
+  
+  
