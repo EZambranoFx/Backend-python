@@ -1,21 +1,31 @@
+import hashlib
+
 def login():
     # Get input from the user
     id = input("Enter ID (must be 10 digits): ")
-    # Check if the ID is exactly 10 digits and consists of only digits
-    if len(id) == 10 and id.isdigit():
-        password = input("Enter Password: ")
-        hash_value = hash(password)
-        profession = input("Enter Profession: ")
-        return id, hash_value, profession
-    else:
-        print("Invalid ID. Please enter 10 digits.")
+    password = input("Enter Password: ")
+    hash_value = hashlib.sha256(password.encode()).hexdigest()
+    
+    # Read user data from file
+    with open("accounts.txt", "r") as file:
+        for line in file:
+            stored_id, stored_hash_value, stored_profession = line.strip().split(",")
+            print(stored_hash_value)
+            print(hash_value)
+            if stored_id == id and stored_hash_value == hash_value:
+                print(f"Login successful! Welcome, user ID: {id}")
+                return 1# Exit the function after successful login
+            else:
+                print("Invalid ID or password.")  # ID not found or password mismatch
+                return 0
+    return 0
 
 def create_account():
     while True:
         id = input("Enter new ID (must be 10 digits): ")
         if len(id) == 10 and id.isdigit():
             password = input("Enter new Password: ")
-            hash_value = hash(password)
+            hash_value = hashlib.sha256(password.encode()).hexdigest()
             profession = input("Enter Profession: ")
             break
         else:
@@ -28,9 +38,7 @@ def create_account():
 # Call the login function
 choice = input("Do you want to login or create an account? (login/create): ")
 if choice.lower() == "login":
-    user_data = login()
-    if user_data is not None:
-        id, hashed_password, profession = user_data
+    if login() == 1:
         print(f"Login successful! Welcome")
     else:
         print("Login failed due to invalid ID.")
