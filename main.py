@@ -1,6 +1,9 @@
 import hashlib
 from Profesional import Profesionales
 from datetime import datetime
+
+from reports import AppointmentReport
+
 professionals_list = []
 def login():
     # Get input from the user
@@ -30,6 +33,8 @@ def create_appointment_for_professional(professional):
     client_contact = input("Enter client contact: ")
     appointment_time =datetime.now().strftime("%B %d, %Y")
     appointment = professional.create_appointment(client_name, client_contact, appointment_time)
+    report = AppointmentReport([appointment])
+    report.generate_csv_report('my_appointments_report.csv')
     print(f"Appointment created: {appointment}")
 
 def find_professional_by_id(id):
