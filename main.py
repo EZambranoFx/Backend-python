@@ -50,10 +50,10 @@ def create_account():
         
     with open("accounts.txt", "a") as file:  # Append to the file
         file.write(f"{id},{hash_value},{profession}\n")
-    return
+
     new_professional = Profesionales(id, hash_value, profession)
     professionals_list.append(new_professional)
-    return
+    return new_professional
 
 # Call the login function
 choice = input("Do you want to login or create an account? (login/create): ")
