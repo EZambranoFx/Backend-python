@@ -1,43 +1,35 @@
 import hashlib
-from Profesional import Profesionales
-from datetime import datetime
-professionals_list = []
+import json
+import datetime
+
 def login():
     # Get input from the user
     id = input("Enter ID (must be 10 digits): ")
     password = input("Enter Password: ")
     hash_value = hashlib.sha256(password.encode()).hexdigest()
     
+    with open('schedule.json', 'r') as file:
+        data = json.load(file)
+        
     # Read user data from file
-    with open("accounts.txt", "r") as file:
-        for line in file:
-            stored_id, stored_hash_value, stored_profession = line.strip().split(",")
-            print(stored_hash_value)
-            print(hash_value)
-            if stored_id == id and stored_hash_value == hash_value:
-                now = datetime.now()
-                date_string = now.strftime("%B %d, %Y")
-                professional = Profesionales(id, stored_hash_value, stored_profession,date_string)
-                professionals_list.append(professional)
-                print(f"Login successful! Welcome, user ID: {id}")
-                return 1# Exit the function after successful login
-            else:
-                print("Invalid ID or password.")  # ID not found or password mismatch
-                return 0
-    return 0
-def create_appointment_for_professional(professional):
-    client_name = input("Enter client name: ")
-    client_contact = input("Enter client contact: ")
-    appointment_time =datetime.now().strftime("%B %d, %Y")
-    appointment = professional.create_appointment(client_name, client_contact, appointment_time)
-    print(f"Appointment created: {appointment}")
+    for account in data['accounts']:
+        if(id == account['id'] and hash_value == account['password']):
+            print(f"Login successful! Welcome, user ID: {id}")
+            return 1# Exit the function after successful login
+        else:
+            print("Invalid ID or password.")  # ID not found or password mismatch
+            return 0
 
-def find_professional_by_id(id):
-    for professional in professionals_list:
-        if professional.id == id:
-            return professional
-    return None
+    return 0
+
 def create_account():
+    
+    try:
+        with open('schedule.json', 'r') as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = {'accounts': []}  # Create an empty list if the file does not exist
+    
     while True:
         id = input("Enter new ID (must be 10 digits): ")
         if len(id) == 10 and id.isdigit():
@@ -45,37 +37,58 @@ def create_account():
             hash_value = hashlib.sha256(password.encode()).hexdigest()
             profession = input("Enter Profession: ")
             break
-        else:
-            print("Invalid ID. Please enter 10 digits.")
         
-    with open("accounts.txt", "a") as file:  # Append to the file
-        file.write(f"{id},{hash_value},{profession}\n")
+    # Read user data from file
+    for account in data['accounts']:
+        if(id == account['id'] or hash_value == account['password']):
+            print("ID or password already used")
+            return
+        
+    with open('schedule.json', 'w') as f:
+        new_account = {'id': id, 'password': hash_value, 'profession': profession}
+        data['accounts'].append(new_account)
+        json.dump(data, f, indent=3)
+    
+    print(f"Account created successfully!")
+    return
 
-    new_professional = Profesionales(id, hash_value, profession)
-    professionals_list.append(new_professional)
-    return new_professional
 
 # Call the login function
+
+def creating_date():
+    print("Creating date")
+    return
+
+
+while True:
+    year = int(input("Pick the year: "))
+    month = int(input("Pick the month: "))
+    day = int(input("Pick the day: "))
+    hour = int(input("Pick the hour: "))
+    minute = int(input("Pick the minute: "))
+    beginDate = datetime.datetime(year, month, day, hour, minute)
+    if(beginDate > datetime.datetime.today()):
+        break
+    else:
+        print("date cannot be before today")
+    endDate = dt + datetime.timedelta(hours = 2)
+    date = [dt, endDate]
+    for citas in date:
+        print(citas)
+
+
 choice = input("Do you want to login or create an account? (login/create): ")
 if choice.lower() == "login":
     if login() == 1:
-        print(f"Login successful! Welcome")
-        professional_id = input("Enter your ID again to proceed: ")
-        professional = find_professional_by_id(professional_id)
-        if professional:
-            action = input("Do you want to create an appointment? (yes/no): ")
-            if action.lower() == "yes":
-                create_appointment_for_professional(professional)
+        while True:
+            choice2 = input("Do you want to add date or exit? (date/exit): ")
+            if choice2.lower() == "date":
+                creating_date()
+            elif choice2.lower() == "exit":
+                break
             else:
-                print("No appointment created.")
-    else:
-        print("Login failed due to invalid ID.")
+                print("Invalid choice.")
 elif choice.lower() == "create":
-    user_data = create_account()
-    #id, hashed_password, profession = user_data
-    print(f"Account created successfully!")
+    create_account()
 else:
     print("Invalid choice.")
-  
- 
-  
