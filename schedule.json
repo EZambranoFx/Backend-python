@@ -1,14 +1,24 @@
 {
    "accounts": [
       {
-         "id": "1234567890",
-         "password": "d74ff0ee8da3b9806b18c877dbf29bbde50b5bd8e4dad7a3a725000feb82e8f1",
-         "profession": "cat"
-      },
-      {
          "id": "0123456789",
-         "password": "155290511d5c4bfb1369217d6846c8eef1ed6a564579516eaf36cf5598ac92de",
-         "profession": "dog"
+         "password": "d74ff0ee8da3b9806b18c877dbf29bbde50b5bd8e4dad7a3a725000feb82e8f1",
+         "profession": "psy",
+         "freeDates": [
+            [
+               "2024-08-25 00:00:00",
+               "2024-08-25 02:00:00"
+            ],
+            [
+               "2024-08-25 00:00:00",
+               "2024-08-25 02:00:00"
+            ],
+            [
+               "2024-08-25 03:00:00",
+               "2024-08-25 05:00:00"
+            ]
+         ],
+         "scheduledDates": []
       }
    ]
 }
